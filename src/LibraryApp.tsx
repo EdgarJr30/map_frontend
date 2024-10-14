@@ -3,7 +3,7 @@ import AppRouter from "./router/AppRouter"
 const LibraryApp = () => {
   return (
     <>
-        <AppRouter />
+      <AppRouter />
     </>
   )
 }

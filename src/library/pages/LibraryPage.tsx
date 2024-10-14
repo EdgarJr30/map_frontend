@@ -9,13 +9,13 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
-interface Author {
+interface Books {
   id: number;
   nombre: string;
 }
 
 const LibraryPage: React.FC = () => {
-  const [authors, setAuthors] = useState<Author[]>([]);
+  const [books, setBooks] = useState<Books[]>([]);
   const navigate = useNavigate();
 
   // Función para obtener el token desde localStorage
@@ -27,16 +27,16 @@ const LibraryPage: React.FC = () => {
       navigate("/login");
     } else {
       // Configurar el header de la solicitud con el token
-      const fetchAuthors = async () => {
+      const fetchBooks = async () => {
         try {
-          const response = await axios.get("http://localhost:12990/api/Autores", {
+          const response = await axios.get("http://localhost:12990/api/libros", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          setAuthors(response.data);
+          setBooks(response.data);
         } catch (error) {
-          console.error("Error fetching authors:", error);
+          console.error("Error fetching books:", error);
           // Manejar el error si el token es inválido o hay otro error
           if (error.response && error.response.status === 401) {
             // Redirigir a login si el token es inválido
@@ -45,14 +45,16 @@ const LibraryPage: React.FC = () => {
         }
       };
 
-      fetchAuthors();
+      fetchBooks();
+
+      console.log(fetchBooks)
     }
   }, [token, navigate]);
 
   return (
     <div className="flex flex-wrap gap-6">
-      {authors.map((author) => (
-        <Card key={author.id} className="w-full max-w-[48rem] flex-row">
+      {books.map((book) => (
+        <Card key={book.id} className="w-full max-w-[48rem] flex-row">
           <CardHeader
             shadow={false}
             floated={false}

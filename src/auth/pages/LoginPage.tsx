@@ -1,14 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext";
+import { useAppContext } from "../../context/AppContext";
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,9 +25,7 @@ export const LoginPage = () => {
 
       const { token, user } = response.data;
       login(token, user.roleId);
-
-      toast.success("Inicio de sesión exitoso!");
-      navigate("/home");
+      // toast.success("Inicio de sesión exitoso!");
 
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {

@@ -1,88 +1,106 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 
-interface Author {
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { useAppContext } from "@/context/AppContext";
+
+interface Book {
   id: number;
-  nombre: string;
+  titulo: string;
+  imagen: string;
+  descripcion: string;
 }
 
 const Home: React.FC = () => {
-  const [authors, setAuthors] = useState<Author[]>([]);
+  const [books, setBook] = useState<Book[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [active, setActive] = useState<boolean>(false);
+  const { searchData } = useAppContext();
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
-      const fetchAuthors = async () => {
-        try {
-          const response = await axios.get("http://localhost:12990/api/Autores");
-          setAuthors(response.data);
-        } catch (error) {
-          console.error("Error fetching authors:", error);
-          if (error.response && error.response.status === 401) {
-            console.log({error})
-          }
+    const fetchBook = async () => {
+      try {
+        const response = await axios.get("http://localhost:12990/api/libros");
+        setBook(response.data);
+      } catch (error: any) {
+        console.error("Error fetching authors:", error);
+        if (error.response && error.response.status === 401) {
+          console.log({ error })
         }
-      };
+      }
+    };
 
-      fetchAuthors();
-    
+    fetchBook();
+
   }, [navigate]);
 
   return (
-    <div className="flex flex-wrap gap-6">
-      {authors.map((author) => (
-        <Card key={author.id} className="w-full max-w-[48rem] flex-row">
-          <CardHeader
-            shadow={false}
-            floated={false}
-            className="m-0 w-2/5 shrink-0 rounded-r-none"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80"
-              alt="card-image"
-              className="h-full w-full object-cover"
-            />
-          </CardHeader>
-          <CardBody>
-            <Typography variant="h6" color="gray" className="mb-4 uppercase">
-              Autor
-            </Typography>
-            <Typography variant="h4" color="blue-gray" className="mb-2">
-              {author.nombre}
-            </Typography>
-            <Typography color="gray" className="mb-8 font-normal">
-              Información adicional sobre el autor o los libros del autor podría ir aquí.
-            </Typography>
-            <a href="#" className="inline-block">
-              <Button variant="text" className="flex items-center gap-2">
-                Learn More
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  className="h-4 w-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                  />
-                </svg>
-              </Button>
-            </a>
-          </CardBody>
-        </Card>
-      ))}
-    </div>
+    <>
+      <div className="flex flex-wrap gap-6">
+        <ul role="list" className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8 p-6">
+          {books.filter((book: Book) => {
+            if (searchData === "" || searchData.length < 3) {
+              return book;
+            }
+
+            if (
+              book.titulo.toLowerCase().indexOf(searchData.toLowerCase()) > -1 ||
+              book.descripcion.toLowerCase().indexOf(searchData.toLowerCase()) > -1
+
+            ) {
+              return book;
+            }
+          }).map((book) => (
+            <li key={book.id} className="relative">
+              <div className="group aspect-h-7 aspect-w-10 block w-full overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+                <img alt="" src={book.imagen} className="pointer-events-none object-cover group-hover:opacity-75" />
+                <button onClick={() => [
+                  setActive(true), setSelectedBook(book)
+                ]} type="button" className="absolute inset-0 focus:outline-none">
+                  <span className="sr-only">View details for {book.titulo}</span>
+                </button>
+              </div>
+              <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">{book.titulo}</p>
+              <p className="pointer-events-none block text-sm font-medium text-gray-500 truncate">{book.descripcion}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <AlertDialog open={active} onOpenChange={setActive}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-center text-2xl">{selectedBook?.titulo}</AlertDialogTitle>
+            <AlertDialogDescription>
+              <div className="p-4 flex items-center justify-center flex-col">
+                <span className="truncate text-wrap text-gray-800 text-base">
+                  {selectedBook?.descripcion}
+                </span>
+                <div className="pt-8">
+                  <img width={300} height={300} src={selectedBook?.imagen} alt={selectedBook?.titulo} />
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-blue-500 text-white hover:bg-blue-700 hover:text-white">Aceptar</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
