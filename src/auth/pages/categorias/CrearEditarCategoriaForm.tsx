@@ -9,11 +9,10 @@ import 'react-toastify/dist/ReactToastify.css';
 interface IFormInput {
     id: number;
     nombre: string;
-    nacionalidad: string;
 }
 
-const CrearEditarAutorForm: React.FC = () => {
-    const { autorId } = useParams<{ autorId?: string }>();
+const CrearEditarCategoriaForm: React.FC = () => {
+    const { categoriaId } = useParams<{ categoriaId?: string }>();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<IFormInput>();
     const [isEditMode, setIsEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -22,9 +21,9 @@ const CrearEditarAutorForm: React.FC = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-        if (autorId) {
+        if (categoriaId) {
             setIsEditMode(true);
-            const fetchAutor = async () => {
+            const fetchCategoria = async () => {
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -37,29 +36,28 @@ const CrearEditarAutorForm: React.FC = () => {
                 }
 
                 try {
-                    const response = await axios.get('http://localhost:12990/api/autores', config);
-                    const autores = response.data;
-                    const autor = autores.find((l: IFormInput) => l.id === parseInt(autorId));
+                    const response = await axios.get('http://localhost:12990/api/categorias', config);
+                    const categorias = response.data;
+                    const categoria = categorias.find((l: IFormInput) => l.id === parseInt(categoriaId));
 
-                    if (autor) {
-                        setValue('nombre', autor.nombre);
-                        setValue('nacionalidad', autor.nacionalidad);
+                    if (categoria) {
+                        setValue('nombre', categoria.nombre);
                     } else {
-                        toast.error('Autor no encontrado');
+                        toast.error('Categoria no encontrado');
                     }
                 } catch (error) {
-                    console.error('Error al cargar los autores:', error);
+                    console.error('Error al cargar las categoria:', error);
                     toast.error('Error al cargar los datos del autor');
                 } finally {
                     setIsLoading(false);
                 }
             };
 
-            fetchAutor();
+            fetchCategoria();
         } else {
             setIsLoading(false);
         }
-    }, [autorId, setValue, token]);
+    }, [categoriaId, setValue, token]);
 
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
         const config = {
@@ -73,20 +71,20 @@ const CrearEditarAutorForm: React.FC = () => {
             return;
         }
 
-        if (data.id !== undefined && data.id.toString() !== autorId) {
-            toast.error('No puedes modificar el ID del autor.');
+        if (data.id !== undefined && data.id.toString() !== categoriaId) {
+            toast.error('No puedes modificar el ID de la categoria.');
             return;
         }
 
         try {
-            if (isEditMode && autorId) {
-                await axios.put(`http://localhost:12990/api/autores/${autorId}`, data, config);
-                toast.success('Autor actualizado exitosamente');
+            if (isEditMode && categoriaId) {
+                await axios.put(`http://localhost:12990/api/categorias/${categoriaId}`, data, config);
+                toast.success('Categoria actualizado exitosamente');
             } else {
-                await axios.post('http://localhost:12990/api/autores', data, config);
-                toast.success('Autor creado exitosamente');
+                await axios.post('http://localhost:12990/api/categorias', data, config);
+                toast.success('Categoria creado exitosamente');
             }
-            navigate('/autores');
+            navigate('/categorias');
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 if (error.response.status === 401) {
@@ -123,16 +121,16 @@ const CrearEditarAutorForm: React.FC = () => {
             cancelButtonText: 'Cancelar'
         });
 
-        if (result.isConfirmed && autorId) {
+        if (result.isConfirmed && categoriaId) {
             try {
-                await axios.delete(`http://localhost:12990/api/autores/${autorId}`, config);
-                Swal.fire('¡Eliminado!', 'El autor ha sido eliminado.', 'success');
-                navigate('/autores');
+                await axios.delete(`http://localhost:12990/api/categorias/${categoriaId}`, config);
+                Swal.fire('¡Eliminado!', 'La categoria ha sido eliminado.', 'success');
+                navigate('/categorias');
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
-                    toast.error(`Error: ${error.response.data.message || 'Error al eliminar el autor'}`);
+                    toast.error(`Error: ${error.response.data.message || 'Error al eliminar la categoria'}`);
                 } else {
-                    toast.error('Error al eliminar el autor');
+                    toast.error('Error al eliminar la categoria');
                 }
             }
         }
@@ -146,16 +144,16 @@ const CrearEditarAutorForm: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-12 m-4">
                 <div className="border-b border-gray-900/10 pb-12">
-                    <h2 className="text-base font-semibold leading-7 text-gray-900">Formulario de Autores</h2>
-                    <p className="mt-1 text-sm leading-6 text-gray-600">Completa los campos para manejar los autores</p>
+                    <h2 className="text-base font-semibold leading-7 text-gray-900">Formulario de Categorias</h2>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">Completa los campos para manejar las categorias</p>
 
-                    {isEditMode && autorId && (
+                    {isEditMode && categoriaId && (
                         <div className="mb-4">
                             <label className="block text-sm font-medium leading-6 text-gray-900">
-                                ID del Autor
+                                ID de la Categoria
                             </label>
                             <input
-                                value={autorId}
+                                value={categoriaId}
                                 readOnly
                                 className="block w-16 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                             />
@@ -177,28 +175,12 @@ const CrearEditarAutorForm: React.FC = () => {
                                 {errors.nombre && <span>Este campo es requerido</span>}
                             </div>
                         </div>
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="nacionalidad" className="block text-sm font-medium leading-6 text-gray-900">
-                                Nacionalidad
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    {...register('nacionalidad', { required: true })}
-                                    id="nacionalidad"
-                                    name="nacionalidad"
-                                    type="text"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
-                                />
-                                {errors.nacionalidad && <span>Este campo es requerido</span>}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div className="mt-6 flex items-center justify-end gap-x-6 m-12">
-                <Link to="/autores">
+                <Link to="/categorias">
                     <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
                         Cancelar
                     </button>
@@ -209,18 +191,18 @@ const CrearEditarAutorForm: React.FC = () => {
                         className="text-sm font-semibold leading-6 text-red-600 mr-4"
                         onClick={handleDelete}
                     >
-                        Eliminar autor
+                        Eliminar categoria
                     </button>
                 )}
                 <button
                     type="submit"
                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                    {isEditMode ? 'Guardar cambios' : 'Crear autor'}
+                    {isEditMode ? 'Guardar cambios' : 'Crear categoria'}
                 </button>
             </div>
         </form>
     );
 };
 
-export default CrearEditarAutorForm;
+export default CrearEditarCategoriaForm;

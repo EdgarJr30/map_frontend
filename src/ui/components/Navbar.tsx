@@ -90,67 +90,6 @@ const Navbar = () => {
                       :
                       null
                     }
-
-                    {/* {nav.nombre === "Mantenimiento" && localStorage.getItem("token") ?
-                      <NavLink
-                        key={nav.nombre}
-                        className={({ isActive }) =>
-                          `rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 ${isActive ? "bg-gray-900 text-white" : ""}`
-                        }
-                        to={nav.url}
-                      >
-                        {nav.nombre}
-                      </NavLink>
-                      :
-                      null
-                    } */}
-
-                    {/* {nav.nombre === "Mantenimiento" && localStorage.getItem("token") ?
-                      <DropdownMenu
-                        key={nav.nombre}
-                      >
-                        <DropdownMenuTrigger asChild>
-                          <Button  >{nav.nombre}</Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                          <DropdownMenuLabel>Manejo mantenimientos</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                              <User className="mr-2 h-4 w-4" />
-                              <span>Libros</span>
-                              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <CreditCard className="mr-2 h-4 w-4" />
-                              <span>Autores</span>
-                              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Settings className="mr-2 h-4 w-4" />
-                              <span>Categorias</span>
-                              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Keyboard className="mr-2 h-4 w-4" />
-                              <span>Usuarios</span>
-                              <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                          </DropdownMenuGroup>
-                          <DropdownMenuSeparator />
-
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <LifeBuoy className="mr-2 h-4 w-4" />
-                            <span>Soporte</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      :
-                      null
-                    } */}
-
                     {/* Menu de Mantenimiento */}
                     {nav.nombre === "Mantenimientos" && token && (
                       <DropdownMenu>
@@ -182,13 +121,13 @@ const Navbar = () => {
                             {roleId === 1 && (
                               <>
                                 <DropdownMenuItem asChild>
-                                  <Link to="/mantenimientos/categorias">
+                                  <Link to="/categorias">
                                     <Settings className="mr-2 h-4 w-4" />
                                     <span>Categorias</span>
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link to="/mantenimientos/usuarios">
+                                  <Link to="/usuarios">
                                     <Keyboard className="mr-2 h-4 w-4" />
                                     <span>Usuarios</span>
                                   </Link>

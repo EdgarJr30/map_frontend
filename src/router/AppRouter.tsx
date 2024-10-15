@@ -10,6 +10,8 @@ import CrearEditarLibroForm from "@/auth/pages/libros/CrearEditarLibroForm"
 import Libros from "@/auth/pages/libros/Libros"
 import Autores from "@/auth/pages/autores/Autores"
 import CrearEditarAutorForm from "@/auth/pages/autores/CrearEditarAutorForm"
+import Categorias from "@/auth/pages/categorias/Categorias"
+import CrearEditarCategoriaForm from "@/auth/pages/categorias/CrearEditarCategoriaForm"
 
 const AppRouter = () => {
 
@@ -28,7 +30,11 @@ const AppRouter = () => {
 
                 <Route path="/autores" element={<ProtectedRoute allowedRoleId={2}><Autores /></ProtectedRoute>} />
                 <Route path="/autores/crear" element={<ProtectedRoute allowedRoleId={2}><CrearEditarAutorForm /></ProtectedRoute>} />
-                <Route path="/autores/:autorId?" element={<ProtectedRoute allowedRoleId={2}><CrearEditarAutorForm /></ProtectedRoute>} />                
+                <Route path="/autores/:autorId?" element={<ProtectedRoute allowedRoleId={2}><CrearEditarAutorForm /></ProtectedRoute>} />  
+
+                <Route path="/categorias" element={<ProtectedRoute><Categorias /></ProtectedRoute>} />
+                <Route path="/categorias/crear" element={<ProtectedRoute><CrearEditarCategoriaForm /></ProtectedRoute>} />
+                <Route path="/categorias/:categoriaId?" element={<ProtectedRoute><CrearEditarCategoriaForm /></ProtectedRoute>} />              
             </Routes>
         </>
     )
