@@ -127,7 +127,7 @@ const Navbar = () => {
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link to="/usuarios">
+                                  <Link to="/auth">
                                     <Keyboard className="mr-2 h-4 w-4" />
                                     <span>Usuarios</span>
                                   </Link>

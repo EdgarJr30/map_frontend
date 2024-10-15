@@ -12,6 +12,8 @@ import Autores from "@/auth/pages/autores/Autores"
 import CrearEditarAutorForm from "@/auth/pages/autores/CrearEditarAutorForm"
 import Categorias from "@/auth/pages/categorias/Categorias"
 import CrearEditarCategoriaForm from "@/auth/pages/categorias/CrearEditarCategoriaForm"
+import Usuarios from "@/auth/pages/ususarios/Usuarios"
+import CrearEditarUsuarioForm from "@/auth/pages/ususarios/CrearEditarUsuarioForm"
 
 const AppRouter = () => {
 
@@ -34,7 +36,11 @@ const AppRouter = () => {
 
                 <Route path="/categorias" element={<ProtectedRoute><Categorias /></ProtectedRoute>} />
                 <Route path="/categorias/crear" element={<ProtectedRoute><CrearEditarCategoriaForm /></ProtectedRoute>} />
-                <Route path="/categorias/:categoriaId?" element={<ProtectedRoute><CrearEditarCategoriaForm /></ProtectedRoute>} />              
+                <Route path="/categorias/:categoriaId?" element={<ProtectedRoute><CrearEditarCategoriaForm /></ProtectedRoute>} /> 
+
+                <Route path="/auth" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
+                <Route path="/auth/register" element={<ProtectedRoute><CrearEditarUsuarioForm /></ProtectedRoute>} />
+                <Route path="/auth/:authId?" element={<ProtectedRoute><CrearEditarUsuarioForm /></ProtectedRoute>} />              
             </Routes>
         </>
     )
