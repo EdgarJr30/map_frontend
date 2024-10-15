@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useAppContext } from "../../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAppContext } from "../../context/AppContext";
 
 export const LoginPage = () => {
   const { login } = useAppContext();
@@ -25,7 +25,7 @@ export const LoginPage = () => {
 
       const { token, user } = response.data;
       login(token, user.roleId);
-      // toast.success("Inicio de sesión exitoso!");
+      toast.success("Inicio de sesión exitoso!");
 
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {

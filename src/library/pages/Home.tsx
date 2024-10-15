@@ -19,6 +19,7 @@ interface Book {
   titulo: string;
   imagen: string;
   descripcion: string;
+  fecha_publicacion: string;
 }
 
 const Home: React.FC = () => {
@@ -36,7 +37,7 @@ const Home: React.FC = () => {
         const response = await axios.get("http://localhost:12990/api/libros");
         setBook(response.data);
       } catch (error: any) {
-        console.error("Error fetching authors:", error);
+        console.error("Error fetching libros:", error);
         if (error.response && error.response.status === 401) {
           console.log({ error })
         }
@@ -49,7 +50,13 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap">
+        <div className="sm:flex-auto p-8">
+          <h1 className="text-base font-bold leading-6 text-gray-900">Biblioteca de Libros</h1>
+          <p className="mt-2 text-sm text-gray-700">
+            Una lista de todos los libros en tu biblioteca, incluyendo su título, descripción y más.
+          </p>
+        </div>
         <ul role="list" className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8 p-6">
           {books.filter((book: Book) => {
             if (searchData === "" || searchData.length < 3) {
@@ -59,7 +66,6 @@ const Home: React.FC = () => {
             if (
               book.titulo.toLowerCase().indexOf(searchData.toLowerCase()) > -1 ||
               book.descripcion.toLowerCase().indexOf(searchData.toLowerCase()) > -1
-
             ) {
               return book;
             }
@@ -75,6 +81,11 @@ const Home: React.FC = () => {
               </div>
               <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">{book.titulo}</p>
               <p className="pointer-events-none block text-sm font-medium text-gray-500 truncate">{book.descripcion}</p>
+              <p className="pointer-events-none block text-sm font-medium text-gray-500 truncate">{new Date(selectedBook?.fecha_publicacion).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}</p>
             </li>
           ))}
         </ul>
@@ -85,14 +96,19 @@ const Home: React.FC = () => {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-center text-2xl">{selectedBook?.titulo}</AlertDialogTitle>
             <AlertDialogDescription>
-              <div className="p-4 flex items-center justify-center flex-col">
-                <span className="truncate text-wrap text-gray-800 text-base">
-                  {selectedBook?.descripcion}
-                </span>
-                <div className="pt-8">
-                  <img width={300} height={300} src={selectedBook?.imagen} alt={selectedBook?.titulo} />
+                <div className="p-4 flex items-center justify-center flex-col">
+                  <span className="truncate text-wrap text-gray-800 text-base">
+                    {selectedBook?.descripcion}
+                  </span>
+                  <div className="pt-8">
+                    <img width={300} height={300} src={selectedBook?.imagen} alt={selectedBook?.titulo} />
+                  </div>
+                  {new Date(selectedBook?.fecha_publicacion).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
                 </div>
-              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

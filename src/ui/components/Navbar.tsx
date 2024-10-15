@@ -7,18 +7,40 @@ import { useAppContext } from "../../context/AppContext"
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
 
+import {
+  CreditCard,
+  Keyboard,
+  LifeBuoy,
+  Settings,
+  User,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 const navigation = [
   { nombre: "Biblioteca", url: "/home" },
-  { nombre: "Login", url: "/login" }
+  { nombre: "Login", url: "/login" },
+  { nombre: "Mantenimientos", url: "/mantenimientos" }
 ]
 
 const Navbar = () => {
   const { logout, search, setSearchData } = useAppContext();
   const [token, setToken] = useState<any>(null);
+  const [roleId, setRoleId] = useState<number | null>(null);
   const location = useLocation()
 
   useEffect(() => {
     setToken(localStorage.getItem("token"))
+    setRoleId(Number(localStorage.getItem("roleId")));
   }, []);
 
   const handleLogout = () => {
@@ -40,7 +62,7 @@ const Navbar = () => {
             <div className="hidden lg:ml-6 lg:block">
               <div className="flex space-x-4">
                 {navigation.map((nav: any) => (
-                  <>
+                  <div key={nav.nombre}>
                     {nav.nombre === "Biblioteca" ?
                       <NavLink
                         key={nav.nombre}
@@ -68,7 +90,123 @@ const Navbar = () => {
                       :
                       null
                     }
-                  </>
+
+                    {/* {nav.nombre === "Mantenimiento" && localStorage.getItem("token") ?
+                      <NavLink
+                        key={nav.nombre}
+                        className={({ isActive }) =>
+                          `rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 ${isActive ? "bg-gray-900 text-white" : ""}`
+                        }
+                        to={nav.url}
+                      >
+                        {nav.nombre}
+                      </NavLink>
+                      :
+                      null
+                    } */}
+
+                    {/* {nav.nombre === "Mantenimiento" && localStorage.getItem("token") ?
+                      <DropdownMenu
+                        key={nav.nombre}
+                      >
+                        <DropdownMenuTrigger asChild>
+                          <Button  >{nav.nombre}</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          <DropdownMenuLabel>Manejo mantenimientos</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                              <User className="mr-2 h-4 w-4" />
+                              <span>Libros</span>
+                              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <CreditCard className="mr-2 h-4 w-4" />
+                              <span>Autores</span>
+                              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Settings className="mr-2 h-4 w-4" />
+                              <span>Categorias</span>
+                              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Keyboard className="mr-2 h-4 w-4" />
+                              <span>Usuarios</span>
+                              <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>
+                            <LifeBuoy className="mr-2 h-4 w-4" />
+                            <span>Soporte</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      :
+                      null
+                    } */}
+
+                    {/* Menu de Mantenimiento */}
+                    {nav.nombre === "Mantenimientos" && token && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button>{nav.nombre}</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          <DropdownMenuLabel>Manejo mantenimientos</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuGroup>
+                            {roleId === 2 && (
+                              <>
+                                <DropdownMenuItem asChild>
+                                  <Link to="/libros">
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Libros</span>
+                                  </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <Link to="/autores">
+                                    <CreditCard className="mr-2 h-4 w-4" />
+                                    <span>Autores</span>
+                                  </Link>
+                                </DropdownMenuItem>
+                              </>
+                            )}
+
+                            {roleId === 1 && (
+                              <>
+                                <DropdownMenuItem asChild>
+                                  <Link to="/mantenimientos/categorias">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Categorias</span>
+                                  </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <Link to="/mantenimientos/usuarios">
+                                    <Keyboard className="mr-2 h-4 w-4" />
+                                    <span>Usuarios</span>
+                                  </Link>
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuGroup>
+
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuItem>
+                            <LifeBuoy className="mr-2 h-4 w-4" />
+                            <span>Soporte</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
 
                 ))}
               </div>
@@ -152,7 +290,7 @@ const Navbar = () => {
       <DisclosurePanel className="lg:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
           {navigation.map((nav: any) => (
-            <>
+            <div key={nav.nombre}>
               {nav.nombre === "Biblioteca" ?
                 <DisclosureButton
                   key={nav.nombre}
@@ -184,7 +322,23 @@ const Navbar = () => {
                 :
                 null
               }
-            </>
+
+              {nav.nombre === "Mantenimientos" && localStorage.getItem("token") ?
+                <DisclosureButton
+                  key={nav.nombre}
+                  as="a"
+                  href={nav.url}
+                  className={cn(
+                    "block rounded-md  px-3 py-2 text-base font-medium text-white",
+                    location.pathname === nav.url ? "bg-gray-900 text-white" : ""
+                  )}
+                >
+                  {nav.nombre}
+                </DisclosureButton>
+                :
+                null
+              }
+            </div>
 
           ))}
 
